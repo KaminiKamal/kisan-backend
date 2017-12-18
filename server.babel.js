@@ -4,18 +4,13 @@ import keys from './twilioKeys';
 import bodyParser from 'body-parser';
 var cors = require('cors');
 const app = express();
-var http = require('http').Server(app);
-var io = require('socket.io')(http);
-io.on('connection', function(socket) {
-    console.log('a user connected');
-    socket.on('message', function (data) {
-        console.log(data);
-        io.emit('msg', data);
-    });
-});
 app.use(cors());
-app.use('/', express.static('public'));
+//app.use('/', express.static('public'));
+app.get('/', (req, res) => {
+    res.send('Hey, I\'m a Node.js app!')
+});
 
+let smsList = [];
 app.post('/sendsms', bodyParser.json(), (req, res) => {console.log("server", req.body);
   var client = require('twilio')(keys.sid, keys.token);
   client.sendMessage({
@@ -24,8 +19,7 @@ app.post('/sendsms', bodyParser.json(), (req, res) => {console.log("server", req
     body: req.body.message
   }, function (err, responseData) {
     if (!err) {
-      //console.log("inside smslist", smsList);
-      res.json({"From": responseData.from, "text": req.body, "status": 200});
+      res.json({"From": responseData.from, "Body": req.body, "status": 200});
     }
     else{
       res.json({"error" : "failed to send the OTP"})
@@ -33,6 +27,4 @@ app.post('/sendsms', bodyParser.json(), (req, res) => {console.log("server", req
   });
 });
 
-http.listen(process.env.PORT, '0.0.0.0', function(err) {
-    console.log('server runninng at ' + http.url );
-});
+app.listen(process.env.PORT || 8080);
