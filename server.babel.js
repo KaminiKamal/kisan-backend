@@ -5,6 +5,14 @@ import bodyParser from 'body-parser';
 var cors = require('cors');
 const app = express();
 var http = require('http').Server(app);
+var io = require('socket.io')(http);
+io.on('connection', function(socket) {
+    console.log('a user connected');
+    socket.on('message', function (data) {
+        console.log(data);
+        io.emit('msg', data);
+    });
+});
 app.use(cors());
 app.use('/', express.static('public'));
 
@@ -25,6 +33,6 @@ app.post('/sendsms', bodyParser.json(), (req, res) => {console.log("server", req
   });
 });
 
-http.listen(process.env.PORTS, '178.32.99.155:80', function(err) {
+http.listen(process.env.PORT, '0.0.0.0', function(err) {
     console.log('server runninng at ' + http.url );
 });
