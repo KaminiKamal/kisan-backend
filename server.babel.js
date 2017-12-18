@@ -4,6 +4,7 @@ import keys from './twilioKeys';
 import bodyParser from 'body-parser';
 var cors = require('cors');
 const app = express();
+var http = require('http').Server(app);
 app.use(cors());
 app.use('/', express.static('public'));
 
@@ -24,4 +25,6 @@ app.post('/sendsms', bodyParser.json(), (req, res) => {console.log("server", req
   });
 });
 
-app.listen(process.env.PORT || 8080);
+http.listen(process.env.PORT, '0.0.0.0', function(err) {
+    console.log('server runninng at ' + http.url );
+});
