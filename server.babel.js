@@ -25,6 +25,6 @@ app.post('/sendsms', bodyParser.json(), (req, res) => {console.log("server", req
   });
 });
 
-http.listen(process.env.PORT, '0.0.0.0', function(err) {
+http.listen(4000, '0.0.0.0', function(err) {
     console.log('server runninng at ' + http.url );
 });
